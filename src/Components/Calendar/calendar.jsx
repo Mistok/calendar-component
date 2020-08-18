@@ -1,5 +1,7 @@
 import React from 'react';
 import './calendar.css'
+import * as calendar from './calendarLogic'
+
 export default class Calendar extends React.Component {
 
     static defaultProps = {
@@ -29,22 +31,22 @@ export default class Calendar extends React.Component {
 
     handlePrevMonthButtonClick = () => {
         const date = new Date(this.year, this.month - 1 );
-        console.log(date)
-        this.setState(date)
+        //console.log(date)
+        this.setState({date})
     };
 
     handleNextMonthButtonClick = () => {
         const date = new Date(this.year, this.month + 1 );
-        console.log(date)
-        this.setState(date)
+        //console.log(date)
+        this.setState({date})
     };
 
     handleSelectChange = () => {
         const year = this.yearSelect.value;
         const month = this.monthSelect.value;
         const date = new Date(year, month);
-        console.log(date);
-        this.setState(date)
+        //console.log(date);
+        this.setState({date})
     };
 
     handleDayClick = (date) => {
@@ -56,20 +58,19 @@ export default class Calendar extends React.Component {
     render(){
 
         const {years, monthNames, weekDayNames } = this.props;
-        const monthData = [
-            [undefined, undefined, new Date(), new Date(), new Date(), new Date()],
-            [new Date(), new Date(), new Date(), new Date(), new Date(), new Date()],
-            [new Date(), new Date(), new Date(), new Date(), new Date(), new Date()],
-            [new Date(), new Date(), new Date(), new Date(), new Date(), new Date()],
-            [new Date(), new Date(), new Date(), undefined, undefined, undefined]
-        ];
+
+        const monthData = calendar.getMonthData(this.year, this.month);
+        console.log(monthData);
         return(
             <div className='calendar'>
                 <header>
                     <button onClick={this.handlePrevMonthButtonClick}>{'<'}</button>
                     <select
                         ref = {element => this.monthSelect = element}
-                        onChange={this.handleSelectChange}>
+                        onChange={this.handleSelectChange}
+                            value = {this.month}
+                    >
+
                         {monthNames.map((name, index) =>
                                 <option key={name} value={index}>
                                     {name}
@@ -79,7 +80,9 @@ export default class Calendar extends React.Component {
                     </select>
                     <select
                         ref = {element => this.yearSelect = element}
-                        onChange={this.handleSelectChange}>
+                        onChange={this.handleSelectChange}
+                        value = {this.year}
+                    >
                         {years.map((name, index) =>
                                 <option key={name} value={name}>
                                     {name}
@@ -101,8 +104,11 @@ export default class Calendar extends React.Component {
                             <tr className='week' key={index}>
                                 {week.map((date, index)=>
                                     date
-                                        ? <td key={index} onClick={() => this.handleDayClick(date)}>{date.getDate()}</td>
-                                        : <td key={index}></td>
+                                        ? <td
+                                            key={index}
+
+                                            onClick={() => this.handleDayClick(date)}>{date.getDate()}</td>
+                                        : <td key={index}/>
                                 )}
                             </tr>
                         )}
