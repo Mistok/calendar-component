@@ -1,12 +1,13 @@
 import React from 'react';
 import './calendar.css'
 import * as calendar from './calendarLogic'
+import classnames from 'classnames';
 
 export default class Calendar extends React.Component {
 
     static defaultProps = {
         date: new Date(),
-        years: [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020],
+        years: [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
         monthNames: ['January', 'February', 'March', 'April', 'May', 'Jul', 'July', 'August', 'September', 'October', 'November', 'December'],
         weekDayNames: ['Mon', 'Thu', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
         onChange:  Function.prototype
@@ -58,7 +59,7 @@ export default class Calendar extends React.Component {
     render(){
 
         const {years, monthNames, weekDayNames } = this.props;
-
+        const { currentDate, selectedDate } = this.state;
         const monthData = calendar.getMonthData(this.year, this.month);
         console.log(monthData);
         return(
@@ -72,9 +73,9 @@ export default class Calendar extends React.Component {
                     >
 
                         {monthNames.map((name, index) =>
-                                <option key={name} value={index}>
-                                    {name}
-                                </option>
+                            <option key={name} value={index}>
+                                {name}
+                            </option>
                             
                         )}
                     </select>
@@ -84,9 +85,9 @@ export default class Calendar extends React.Component {
                         value = {this.year}
                     >
                         {years.map((name, index) =>
-                                <option key={name} value={name}>
-                                    {name}
-                                </option>
+                            <option key={name} value={name}>
+                                {name}
+                            </option>
                             
                         )}
                     </select>
@@ -106,8 +107,12 @@ export default class Calendar extends React.Component {
                                     date
                                         ? <td
                                             key={index}
-
-                                            onClick={() => this.handleDayClick(date)}>{date.getDate()}</td>
+                                            className={classnames("day", {
+                                             'today': calendar.areEqualDates(currentDate, date),
+                                             'selected': calendar.areEqualDates(date, selectedDate),
+                                            })}
+                                            onClick={() => this.handleDayClick(date)}>{date.getDate()}
+                                          </td>
                                         : <td key={index}/>
                                 )}
                             </tr>

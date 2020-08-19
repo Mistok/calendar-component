@@ -23,7 +23,15 @@ const WEEK_DAYS_FROM_MONDAY = [6, 0, 1, 2, 3, 4, 5];
 export function isLeapYear(year) {
     return !((year % 4 ) || (!(year % 100 ) && (year % 400))); // проверка на высокосный год
 }
+export function areEqualDates(a, b) {
+    if(!a || !b) return false;
 
+    return(
+        a.getFullYear() === b.getFullYear() &&
+        a.getMonth() === b.getMonth() &&
+        a.getDate() === b.getDate()
+    )
+}
 export function getDaysInMonth(date) {
     let month = date.getMonth();
     let year = date.getFullYear();
